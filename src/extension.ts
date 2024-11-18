@@ -317,7 +317,7 @@ const getWebviewContent = (content: string | undefined) => {
                         '<div class="window-button button-minimize"></div>\n'+
                         '<div class="window-button button-expand"></div>\n'+
                     '</div>\n'+
-                    '<div class="window-title"></div>\n'+
+                    '<div class="window-title">Code Card</div>\n'+
                 '</div>\n'+
                 '<div class="window-content">\n'+
                     '<pre><code id="codeBlock">\n'+content+'</code></pre>\n'+
