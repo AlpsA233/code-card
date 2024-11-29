@@ -23,7 +23,16 @@
         "command": "code-card.generateCard",
         "title": "Generate Card"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "code-card.generateCard",
+          "group": "navigation",
+          "when": "editorHasSelection"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
