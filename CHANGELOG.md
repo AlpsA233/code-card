@@ -1,12 +1,12 @@
 # Change Log
 
-## [0.0.2] - 2024-03-19
+## [0.0.2] - 2024-12-02
 
 ### Added
 - Support auto-indent formatting (pseudo)
   - Automatically adjust code indentation based on the second smallest indent level
 
-## [0.0.1] - 2024-03-18
+## [0.0.1] - 2024-11-18
 
 ### Added
 - Initial release
