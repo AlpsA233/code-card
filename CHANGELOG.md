@@ -1,9 +1,19 @@
 # Change Log
 
-All notable changes to the "code-card" extension will be documented in this file.
+## [0.0.2] - 2024-03-19
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Added
+- Support auto-indent formatting (pseudo)
+  - Automatically adjust code indentation based on the second smallest indent level
+  - Maintain relative indentation structure for better readability
 
-## [Unreleased]
+## [0.0.1] - 2024-03-18
 
+### Added
 - Initial release
+- Generate macOS-style code card from selected code
+- Support copy as JPG image
+- Support save as image file
+- Customized window controls and title bar
+- Code syntax highlighting
+- Toast notifications for operations
