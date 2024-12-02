@@ -19,47 +19,29 @@ export function activate(context: vscode.ExtensionContext) {
 		// 格式化代码
 		const lines = selectedText.split('\n');
 		
-		// 1. 找出最小缩进量（忽略空行）
-		const minIndent = lines
+		// 1. 收集所有非空行的缩进量
+		const indents = lines
 			.filter(line => line.trim().length > 0)
-			.reduce((min, line) => {
-				const indent = line.match(/^\s*/)[0].length;
-				return Math.min(min, indent);
-			}, Infinity);
+			.map(line => line.match(/^\s*/)[0].length)
+			.sort((a, b) => a - b);
 
-		console.log('minIndent:', minIndent);
-		console.log(' \t\thaha\t\t  ');
-		console.log(' \t\thaha\t\t  '.trim());
+		// 2. 找到倒数第二小的缩进量
+		const secondSmallestIndent = indents[1] || 0;
 		
-			
-
-		// 2. 处理每一行，保持相对缩进
+		// 3. 处理每一行
 		selectedText = lines
 			.map(line => {
-				if (line.trim().length === 0) {
-					return '';  // 空行处理
-				}
+				if (line.trim().length === 0) return '';
+				
 				const currentIndent = line.match(/^\s*/)[0].length;
-				const relativeIndent = currentIndent - minIndent;
-				// 使用两个空格作为缩进单位
-				return '  '.repeat(relativeIndent / 2) + line.trim();
+				// 如果当前缩进大于倒数第二小的缩进，则减去该值
+				const newIndent = currentIndent > secondSmallestIndent 
+					? currentIndent - secondSmallestIndent 
+					: 0;
+				
+				return ' '.repeat(newIndent) + line.trim();
 			})
 			.join('\n');
-			console.log(lines
-			.map(line => {
-				if (line.trim().length === 0) {
-					return '';  // 空行处理
-				}
-				const currentIndent = line.match(/^\s*/)[0].length;
-				const relativeIndent = currentIndent - minIndent;
-				console.log('relativeIndent:', relativeIndent);
-				console.log('currentIndent:', currentIndent);
-				
-				
-				// 使用两个空格作为缩进单位
-				return '  '.repeat(relativeIndent / 2) + line.trim();
-			}));
-			
 
 		// 创建预览窗口
 		const panel = vscode.window.createWebviewPanel(
@@ -70,8 +52,6 @@ export function activate(context: vscode.ExtensionContext) {
 				enableScripts: true
 			}
 		);
-		console.log('selectedText:', selectedText);
-		
 
 		// 生成预览
 		const html = getWebviewContent(selectedText);

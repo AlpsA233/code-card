@@ -276,7 +276,7 @@ export const getWebviewContent = (content: string | undefined) => {
                     '<div class="window-title">Code Card</div>\n'+
                 '</div>\n'+
                 '<div class="window-content">\n'+
-                    '<pre><code id="codeBlock">\n'+content+'</code></pre>\n'+
+                    '<pre><code id="codeBlock">'+content+'</code></pre>\n'+
                 '</div>\n'+
             '</div>\n'+
         '</div>\n'+
