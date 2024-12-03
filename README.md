@@ -19,3 +19,5 @@ The Code Card extension allows users to generate code cards in Visual Studio Cod
 
 If you have any questions, feel free to comment or submit an issue.  
 ![Github](https://img.icons8.com/?size=16&id=12599&format=png&color=FFFFFF): https://github.com/AlpsA233/code-card.git
+
+> This is my first time developing a Visual Studio Code extension. I understand there will be many issues, so I sincerely consider everyone's suggestions.
