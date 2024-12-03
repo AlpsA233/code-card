@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.0] - 2024-12-03
+- Support editing code and preview
+- Change background color to black
+
 ## [0.0.2] - 2024-12-02
 
 ### Added
