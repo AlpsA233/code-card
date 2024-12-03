@@ -64,6 +64,7 @@ export const getWebviewContent = (content: string | undefined) => {
             border-radius: 12px;
             box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.08), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.04), 0 16px 16px rgba(0,0,0,0.02);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background-color: #ffffff;
         }
 
         .window:hover {
