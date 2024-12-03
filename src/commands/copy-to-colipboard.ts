@@ -9,417 +9,507 @@ export const getWebviewContent = (content: string | undefined) => {
     
     // 转义特殊字符  
     content = content  
-    //     .replace(/`/g, '\\`')           // 转义反引号  
-    //     .replace(/\${/g, '\\${')        // 转义模板字符串插值语法  
         .replace(/</g, '&lt;')          // 转义HTML标签  
         .replace(/>/g, '&gt;');  
 
-    // return content;
-	return '<!DOCTYPE html>\n'+
-'<html lang="en">\n'+
-'<head>\n'+
-    '<meta charset="UTF-8">\n'+
-    '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'+
-    '<title>Code Card</title>\n'+
-    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">\n'+
-    '<style>\n'+
-        '* {\n'+
-            'box-sizing: border-box;\n'+
-            'margin: 0;\n'+
-            'padding: 0;\n'+
-        '}\n'+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        '@keyframes rotation {\n'+
-            '0% { transform: rotate(0deg); }\n'+
-            '100% { transform: rotate(360deg); }\n'+
-        '}\n'+    
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }    
 
-        'body {\n'+
-            'margin: 0;\n'+
-            'padding: 40px 20px;\n'+
-            'min-height: 100vh;\n'+
-            'display: flex;\n'+
-            'align-items: center;\n'+
-            'justify-content: center;\n'+
-            'background-color: #f3f4f6;\n'+
-            'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;\n'+
-        '}\n'+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: scroll;
+            min-width: fit-content;
+        }
 
-        '.container {\n'+
-            'display: flex;\n'+
-            'flex-direction: column;\n'+
-            'align-items: center;\n'+
-            'gap: 16px;\n'+
-            'margin: 20px;\n'+
-        '}\n'+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin: 20px;
+            width: fit-content;
+            min-width: min-content;
+        }
 
-        '.button-container {\n'+
-            'display: flex;\n'+
-            'gap: 12px;\n'+
-            'justify-content: center;\n'+
-            'margin-top: 8px;\n'+
-        '}\n'+
+        .main {
+            padding: 1rem;
+        }
 
-        '.main {\n'+
-            'padding: 1rem;\n'+
-        '}\n'+
+        .window {
+            display: inline-block;
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.08), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.04), 0 16px 16px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
 
-        '.window {\n'+
-            'display: inline-block;\n'+
-            'min-width: 200px;\n'+
-            // 'background-color: white;\n'+
-            'border-radius: 12px;\n'+
-            'box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.08), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.04), 0 16px 16px rgba(0,0,0,0.02);\n'+
-            'transition: transform 0.2s ease, box-shadow 0.2s ease;\n'+
-        '}\n'+
+        .window:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 2px rgba(0,0,0,0.12), 0 4px 4px rgba(0,0,0,0.1), 0 8px 8px rgba(0,0,0,0.08), 0 16px 16px rgba(0,0,0,0.06), 0 32px 32px rgba(0,0,0,0.04);
+        }
 
-        '.window:hover {\n'+
-            'transform: translateY(-2px);\n'+
-            'box-shadow: 0 2px 2px rgba(0,0,0,0.12), 0 4px 4px rgba(0,0,0,0.1), 0 8px 8px rgba(0,0,0,0.08), 0 16px 16px rgba(0,0,0,0.06), 0 32px 32px rgba(0,0,0,0.04);\n'+
-        '}\n'+
+        .window-titlebar {
+            background-color: #e5e7eb;
+            padding: 12px 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            border-bottom: 1px solid rgba(209, 213, 219, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
 
-        '.window-titlebar {\n'+
-            'background-color: #e5e7eb;\n'+
-            'padding: 12px 20px;\n'+
-            'border-top-left-radius: 12px;\n'+
-            'border-top-right-radius: 12px;\n'+
-            'border-bottom: 1px solid rgba(209, 213, 219, 0.5);\n'+
-            'display: flex;\n'+
-            'justify-content: space-between;\n'+
-            'align-items: center;\n'+
-            'position: relative;\n'+
-        '}\n'+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
 
-        '.window-controls {\n'+
-            'display: flex;\n'+
-            'gap: 8px;\n'+
-        '}\n'+
+        .window-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+            position: relative;
+        }
 
-        '.window-button {\n'+
-            'width: 12px;\n'+
-            'height: 12px;\n'+
-            'border-radius: 50%;\n'+
-            'transition: transform 0.2s ease;\n'+
-            'position: relative;\n'+
-        '}\n'+
+        .window-button:hover {
+            transform: scale(1.1);
+        }
 
-        '.window-button:hover {\n'+
-            'transform: scale(1.1);\n'+
-        '}\n'+
+        .window-button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);
+        }
 
-        '.window-button::after {\n'+
-            'content: "";\n'+
-            'position: absolute;\n'+
-            'top: 0;\n'+
-            'left: 0;\n'+
-            'right: 0;\n'+
-            'bottom: 0;\n'+
-            'border-radius: 50%;\n'+
-            'box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);\n'+
-        '}\n'+
+        .button-close {
+            background-color: #ff5f57;
+        }
 
-        '.button-close {\n'+
-            'background-color: #ff5f57;\n'+
-        '}\n'+
+        .button-minimize {
+            background-color: #ffbd2e;
+        }
 
-        '.button-minimize {\n'+
-            'background-color: #ffbd2e;\n'+
-        '}\n'+
+        .button-expand {
+            background-color: #28c840;
+        }
 
-        '.button-expand {\n'+
-            'background-color: #28c840;\n'+
-        '}\n'+
+        .window-title {
+            font-size: 12px;
+            color: #6b7280;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
 
-        '.window-title {\n'+
-            'font-size: 12px;\n'+
-            'color: #6b7280;\n'+
-            'position: absolute;\n'+
-            'left: 50%;\n'+
-            'transform: translateX(-50%);\n'+
-            'white-space: nowrap;\n'+
-        '}\n'+
+        .window-content {
+            position: relative;
+            padding: 24px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            overflow: hidden;
+        }
 
-        '.window-content {\n'+
-            'padding: 24px;\n'+
-            // 'background-color: white;\n'+
-            'border-bottom-left-radius: 12px;\n'+
-            'border-bottom-right-radius: 12px;\n'+
-            'overflow: hidden;\n'+
-        '}\n'+
+        pre {
+            margin: 0;
+            white-space: pre;
+            overflow: visible;
+            width: fit-content;
+            min-width: 100%;
+        }
 
-        'pre {\n'+
-            'margin: 0;\n'+
-            'white-space: pre-wrap;\n'+       // 修改这里
-            'word-wrap: break-word;\n'+       // 添加这行
-    'overflow-x: auto;\n'+          
-        '}\n'+
+        code {
+            font-family: "Fira Code", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre;
+            display: inline-block;
+            width: fit-content;
+        }
 
-        'code {\n'+
-            'font-family: "Fira Code", "Menlo", "Monaco", "Courier New", monospace;\n'+
-            'font-size: 14px;\n'+
-            'line-height: 1.6;\n'+
-            // 'background: transparent;\n'+
-            'word-break: break-all;\n'+       // 添加这行
-            'white-space: pre-wrap;\n'+       // 添加这行
-        '}\n'+
+        .hljs {
+            padding: 0;
+        }
 
-        '.hljs {\n'+
-            'padding: 0;\n'+
-            // 'background: transparent;\n'+
-        '}\n'+
+        .button-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+        }
 
-        '.action-button {\n'+
-            'padding: 10px 20px;\n'+
-            'font-size: 13px;\n'+
-            'color: #ffffff;\n'+
-            'background-color: #0ea5e9;\n'+
-            'border: none;\n'+
-            'border-radius: 8px;\n'+
-            'cursor: pointer;\n'+
-            'transition: all 0.2s ease;\n'+
-            'font-weight: 500;\n'+
-            'box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2), 0 4px 6px rgba(14, 165, 233, 0.1);\n'+
-            'display: inline-flex;\n'+
-            'align-items: center;\n'+
-            'gap: 8px;\n'+
-        '}\n'+
+        .action-button {
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #ffffff;
+            background-color: #0ea5e9;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2), 0 4px 6px rgba(14, 165, 233, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-        '.action-button:hover {\n'+
-            'background-color: #0284c7;\n'+
-            'transform: translateY(-1px);\n'+
-            'box-shadow: 0 4px 6px rgba(14, 165, 233, 0.25), 0 6px 8px rgba(14, 165, 233, 0.15);\n'+
-        '}\n'+
+        .action-button:hover {
+            background-color: #0284c7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.25), 0 6px 8px rgba(14, 165, 233, 0.15);
+        }
 
-        '.action-button:active {\n'+
-            'transform: translateY(0);\n'+
-            'box-shadow: 0 1px 2px rgba(14, 165, 233, 0.2);\n'+
-        '}\n'+
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(14, 165, 233, 0.2);
+        }
 
-        '.action-button:disabled {\n'+
-            'background-color: #9ca3af;\n'+
-            'cursor: not-allowed;\n'+
-            'transform: none;\n'+
-            'box-shadow: none;\n'+
-        '}\n'+
+        .action-button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
-        '.spinner {\n'+
-            'width: 16px;\n'+
-            'height: 16px;\n'+
-            'border: 2px solid #ffffff;\n'+
-            'border-bottom-color: transparent;\n'+
-            'border-radius: 50%;\n'+
-            'display: none;\n'+
-            'animation: rotation 1s linear infinite;\n'+
-        '}\n'+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: none;
+            animation: rotation 1s linear infinite;
+        }
 
-        '.spinner.active {\n'+
-            'display: inline-block;\n'+
-        '}\n'+
+        .spinner.active {
+            display: inline-block;
+        }
 
-        '#toast {\n'+
-            'position: fixed;\n'+
-            'top: 20px;\n'+
-            'right: 20px;\n'+
-            'padding: 12px 24px;\n'+
-            'background-color: #10b981;\n'+
-            'color: white;\n'+
-            'border-radius: 8px;\n'+
-            'font-size: 14px;\n'+
-            'transform: translateY(-100px);\n'+
-            'transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n'+
-            'box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);\n'+
-        '}\n'+
+        #toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background-color: #10b981;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            transform: translateY(-100px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+        }
 
-        '#toast.show {\n'+
-            'transform: translateY(0);\n'+
-        '}\n'+
+        #toast.show {
+            transform: translateY(0);
+        }
 
-        '@media (max-width: 640px) {\n'+
-            'body {\n'+
-                'padding: 20px 10px;\n'+
-            '}\n'+
+        .editor-container {
+            display: none;
+            width: 100%;
+            height: auto;
+        }
 
-            '.container {\n'+
-                'margin: 10px;\n'+
-            '}\n'+
+        .editor-container textarea {
+            white-space: pre;
+            overflow: visible;
+            width: fit-content;
+            min-width: 100%;
+        }
 
-            '.window {\n'+
-                'margin: 5px;\n'+
-            '}\n'+
+        .edit-button {
+            background-color: #4b5563 !important;
+        }
 
-            '.window-content {\n'+
-                'padding: 16px;\n'+
-            '}\n'+
+        .edit-button:hover {
+            background-color: #374151 !important;
+        }
 
-            '.button-container {\n'+
-                'flex-direction: column;\n'+
-                'width: 100%;\n'+
-            '}\n'+
+        .edit-button.active {
+            background-color: #6366f1 !important;
+        }
 
-            '.action-button {\n'+
-                'width: 100%;\n'+
-                'justify-content: center;\n'+
-            '}\n'+
-        '}\n'+
-    '</style>\n'+
-'</head>\n'+
-'<body>\n'+
-    '<div class="container">\n'+
-        '<div class="main">\n'+
-            '<div class="window">\n'+
-                '<div class="window-titlebar">\n'+
-                    '<div class="window-controls">\n'+
-                        '<div class="window-button button-close"></div>\n'+
-                        '<div class="window-button button-minimize"></div>\n'+
-                        '<div class="window-button button-expand"></div>\n'+
-                    '</div>\n'+
-                    '<div class="window-title">Code Card</div>\n'+
-                '</div>\n'+
-                '<div class="window-content">\n'+
-                    '<pre class="hljs" ><code id="codeBlock">'+content+'</code></pre>\n'+
-                '</div>\n'+
-            '</div>\n'+
-        '</div>\n'+
-        '<div class="button-container">\n'+
-            '<button class="action-button" id="copyButton">\n'+
-                '<span class="spinner" id="copySpinner"></span>\n'+
-                '<span class="button-text">Copy as jpg</span>\n'+
-            '</button>\n'+
-            '<button class="action-button" id="saveButton">\n'+
-                '<span class="spinner" id="saveSpinner"></span>\n'+
-                '<span class="button-text">Save Image</span>\n'+
-            '</button>\n'+
-        '</div>\n'+
-    '</div>\n'+
-    '<div id="toast">Copied to clipboard!</div>\n'+
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>\n'+
-    '<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>\n'+
-    '<script>\n'+
-        'hljs.highlightAll();\n'+
-        'const copyButton = document.getElementById("copyButton");\n'+
-        'const saveButton = document.getElementById("saveButton");\n'+
-        'const copySpinner = document.getElementById("copySpinner");\n'+
-        'const saveSpinner = document.getElementById("saveSpinner");\n'+
-        'const toast = document.getElementById("toast");\n'+
+        .edit-button.active:hover {
+            background-color: #4f46e5 !important;
+        }
 
-        'function setLoading(button, spinner, isLoading, text) {\n'+
-            'button.disabled = isLoading;\n'+
-            'spinner.classList.toggle("active", isLoading);\n'+
-            'button.querySelector(".button-text").textContent = isLoading ? "Processing..." : text;\n'+
-        '}\n'+
+        .preview-container {
+            width: fit-content;
+            min-width: 100%;
+        }
 
-        'function showToast(message, isError = false) {\n'+
-            'toast.textContent = message;\n'+
-            'toast.style.backgroundColor = isError ? "#ef4444" : "#10b981";\n'+
-            'toast.classList.add("show");\n'+
-            'setTimeout(() => {\n'+
-                'toast.classList.remove("show");\n'+
-            '}, 3000);\n'+
-        '}\n'+
+        @media (max-width: 1024px) {
+            body {
+                padding: 20px 10px;
+                overflow-x: auto;
+            }
 
-        'async function fallbackCopy(dataUrl) {\n'+
-            'try {\n'+
-                'const img = new Image();\n'+
-                'img.src = dataUrl;\n'+
-                'img.style.position = "fixed";\n'+
-                'img.style.left = "-9999px";\n'+
-                'document.body.appendChild(img);\n'+
+            .container {
+                margin: 10px;
+                width: fit-content;
+            }
 
-                'const tempCanvas = document.createElement("canvas");\n'+
-                'await new Promise(resolve => {\n'+
-                    'img.onload = () => {\n'+
-                        'tempCanvas.width = img.width;\n'+
-                        'tempCanvas.height = img.height;\n'+
-                        'const ctx = tempCanvas.getContext("2d");\n'+
-                        'ctx.drawImage(img, 0, 0);\n'+
-                        'document.body.removeChild(img);\n'+
-                        'resolve();\n'+
-                    '};\n'+
-                '});\n'+
+            .window {
+                margin: 5px;
+            }
 
-                'tempCanvas.toBlob(async (blob) => {\n'+
-                    'try {\n'+
-                        'const clipboardItem = new ClipboardItem({ "image/png": blob });\n'+
-                        'await navigator.clipboard.write([clipboardItem]);\n'+
-                        'showToast("Copied to clipboard!");\n'+
-                    '} catch (e) {\n'+
-                        'console.error("Fallback copy failed:", e);\n'+
-                        'const link = document.createElement("a");\n'+
-                        'link.download = "code-snapshot.jpg";\n'+
-                        'link.href = dataUrl;\n'+
-                        'link.click();\n'+
-                        'showToast("Image downloaded (copy not supported in your browser)", true);\n'+
-                    '}\n'+
-                '}, "image/png");\n'+
-            '} catch (error) {\n'+
-                'console.error("Fallback error:", error);\n'+
-                'showToast("Failed to copy/download image", true);\n'+
-            '}\n'+
-        '}\n'+
+            .window-content {
+                padding: 16px;
+            }
 
-        'async function captureToCanvas() {\n'+
-            'const element = document.querySelector(".main");\n'+
-            'return html2canvas(element, {\n'+
-                'backgroundColor: null,\n'+
-                'scale: 2,\n'+
-                'logging: false,\n'+
-                'useCORS: true\n'+
-            '});\n'+
-        '}\n'+
+            .button-container {
+                flex-direction: column;
+                width: 100%;
+            }
 
-        'async function captureAndCopyToClipboard() {\n'+
-            'try {\n'+
-                'setLoading(copyButton, copySpinner, true, "Copy as jpg");\n'+
-                'const canvas = await captureToCanvas();\n'+
-                'const dataUrl = canvas.toDataURL("image/jpeg", 0.95);\n'+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+            <div class="window">
+                <div class="window-titlebar">
+                    <div class="window-controls">
+                        <div class="window-button button-close"></div>
+                        <div class="window-button button-minimize"></div>
+                        <div class="window-button button-expand"></div>
+                    </div>
+                    <div class="window-title">Code Card</div>
+                </div>
+                <div class="window-content">
+                    <div class="preview-container">
+                        <pre class="hljs"><code id="codeBlock">${content}</code></pre>
+                    </div>
+                    <div class="editor-container">
+                        <textarea id="codeEditor" spellcheck="false">${content}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="action-button" id="copyButton">
+                <span class="spinner" id="copySpinner"></span>
+                <span class="button-text">🏞 Copy as jpg</span>
+            </button>
+            <button class="action-button" id="saveButton">
+                <span class="spinner" id="saveSpinner"></span>
+                <span class="button-text">💾 Save Image</span>
+            </button>
+            <button class="action-button edit-button" id="editModeBtn">
+                <span class="button-text">✏️ Edit Code</span>
+            </button>
+        </div>
+    </div>
+    <div id="toast">Copied to clipboard!</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        hljs.highlightAll();
+        const copyButton = document.getElementById("copyButton");
+        const saveButton = document.getElementById("saveButton");
+        const copySpinner = document.getElementById("copySpinner");
+        const saveSpinner = document.getElementById("saveSpinner");
+        const toast = document.getElementById("toast");
+        const editModeBtn = document.getElementById("editModeBtn");
+        const previewContainer = document.querySelector(".preview-container");
+        const editorContainer = document.querySelector(".editor-container");
+        const codeEditor = document.getElementById("codeEditor");
+        const codeBlock = document.getElementById("codeBlock");
 
-                'try {\n'+
-                    'const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));\n'+
-                    'const clipboardItem = new ClipboardItem({ "image/png": blob });\n'+
-                    'await navigator.clipboard.write([clipboardItem]);\n'+
-                    'showToast("Copied to clipboard!");\n'+
-                '} catch (clipboardError) {\n'+
-                    'console.warn("Primary clipboard method failed, trying fallback:", clipboardError);\n'+
-                    'await fallbackCopy(dataUrl);\n'+
-                '}\n'+
-            '} catch (error) {\n'+
-                'console.error("Capture error:", error);\n'+
-                'showToast("Capture error!", true);\n'+
-            '} finally {\n'+
-                'setLoading(copyButton, copySpinner, false, "Copy as jpg");\n'+
-            '}\n'+
-        '}\n'+
+        let isEditMode = false;
 
-        'async function saveImage() {\n'+
-            'try {\n'+
-                'setLoading(saveButton, saveSpinner, true, "Save Image");\n'+
-                'const canvas = await captureToCanvas();\n'+
-                'const dataUrl = canvas.toDataURL("image/jpeg", 0.95);\n'+
+        function setLoading(button, spinner, isLoading, text) {
+            button.disabled = isLoading;
+            spinner.classList.toggle("active", isLoading);
+            button.querySelector(".button-text").textContent = isLoading ? "Processing..." : text;
+        }
 
-                'const link = document.createElement("a");\n'+
-                'const timestamp = new Date().toISOString().replace(/[:]/g, "-").split(".")[0];\n'+
-                'link.download = `code-snapshot-${timestamp}.jpg`;\n'+
-                'link.href = dataUrl;\n'+
-                'link.click();\n'+
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? "#ef4444" : "#10b981";
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            editModeBtn.classList.toggle("active", isEditMode);
+            editModeBtn.querySelector(".button-text").textContent = isEditMode ? "👁 Preview Code" : "✏️ Edit Code";
+            
+            if (isEditMode) {
+                const windowContent = document.querySelector(".window-content");
+                const currentWidth = windowContent.offsetWidth;
+                const previewHeight = previewContainer.offsetHeight;
                 
-                'showToast("Image saved successfully!");\n'+
-            '} catch (error) {\n'+
-                'console.error("Save error:", error);\n'+
-                'showToast("Failed to save image!", true);\n'+
-            '} finally {\n'+
-                'setLoading(saveButton, saveSpinner, false, "Save Image");\n'+
-            '}\n'+
-        '}\n'+
+                editorContainer.style.width = \`\${currentWidth}px\`;
+                editorContainer.style.display = "block";
+                previewContainer.style.display = "none";
+                codeEditor.style.height = \`\${previewHeight}px\`;
+                codeEditor.style.width = \`\${currentWidth}px\`;
+            } else {
+                editorContainer.style.display = "none";
+                previewContainer.style.display = "block";
+                updatePreview();
+            }
+        }
 
-        'copyButton.addEventListener("click", async () => {\n'+
-            'if (!navigator.clipboard) {\n'+
-                'showToast("Clipboard API not supported - trying alternative method", true);\n'+
-            '}\n'+
-            'await captureAndCopyToClipboard();\n'+
-        '});\n'+
+        function updatePreview() {
+            const code = codeEditor.value;
+            codeBlock.textContent = code;
+            hljs.highlightElement(codeBlock);
+        }
 
-        'saveButton.addEventListener("click", saveImage);\n'+
-    '</script>\n'+
-'</body>\n'+
-'</html>';
-}
+        async function fallbackCopy(dataUrl) {
+            try {
+                const img = new Image();
+                img.src = dataUrl;
+                img.style.position = "fixed";
+                img.style.left = "-9999px";
+                document.body.appendChild(img);
+
+                const tempCanvas = document.createElement("canvas");
+                await new Promise(resolve => {
+                    img.onload = () => {
+                        tempCanvas.width = img.width;
+                        tempCanvas.height = img.height;
+                        const ctx = tempCanvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0);
+                        document.body.removeChild(img);
+                        resolve();
+                    };
+                });
+
+                tempCanvas.toBlob(async (blob) => {
+                    try {
+                        const clipboardItem = new ClipboardItem({ "image/png": blob });
+                        await navigator.clipboard.write([clipboardItem]);
+                        showToast("Copied to clipboard!");
+                    } catch (e) {
+                        console.error("Fallback copy failed:", e);
+                        const link = document.createElement("a");
+                        link.download = "code-snapshot.jpg";
+                        link.href = dataUrl;
+                        link.click();
+                        showToast("Image downloaded (copy not supported in your browser)", true);
+                    }
+                }, "image/png");
+            } catch (error) {
+                console.error("Fallback error:", error);
+                showToast("Failed to copy/download image", true);
+            }
+        }
+
+        async function captureToCanvas() {
+            const element = document.querySelector(".main");
+            return html2canvas(element, {
+                backgroundColor: null,
+                scale: 2,
+                logging: false,
+                useCORS: true
+            });
+        }
+
+        async function captureAndCopyToClipboard() {
+            try {
+                setLoading(copyButton, copySpinner, true, "🏞 Copy as jpg");
+                const canvas = await captureToCanvas();
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+
+                try {
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+                    const clipboardItem = new ClipboardItem({ "image/png": blob });
+                    await navigator.clipboard.write([clipboardItem]);
+                    showToast("Copied to clipboard!");
+                } catch (clipboardError) {
+                    console.warn("Primary clipboard method failed, trying fallback:", clipboardError);
+                    await fallbackCopy(dataUrl);
+                }
+            } catch (error) {
+                console.error("Capture error:", error);
+                showToast("Capture error!", true);
+            } finally {
+                setLoading(copyButton, copySpinner, false, "🏞 Copy as jpg");
+            }
+        }
+
+        async function saveImage() {
+            try {
+                setLoading(saveButton, saveSpinner, true, "💾 Save Image");
+                const canvas = await captureToCanvas();
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+
+                const link = document.createElement("a");
+                const timestamp = new Date().toISOString().replace(/[:]/g, "-").split(".")[0];
+                link.download = \`code-snapshot-\${timestamp}.jpg\`;
+                link.href = dataUrl;
+                link.click();
+                
+                showToast("Image saved successfully!");
+            } catch (error) {
+                console.error("Save error:", error);
+                showToast("Failed to save image!", true);
+            } finally {
+                setLoading(saveButton, saveSpinner, false, "💾 Save Image");
+            }
+        }
+
+        copyButton.addEventListener("click", async () => {
+            if (!navigator.clipboard) {
+                showToast("Clipboard API not supported - trying alternative method", true);
+            }
+            await captureAndCopyToClipboard();
+        });
+
+        saveButton.addEventListener("click", saveImage);
+        editModeBtn.addEventListener("click", toggleEditMode);
+        codeEditor.addEventListener("input", () => {
+            if (!isEditMode) return;
+            autoResizeTextarea();
+            updatePreview();
+        });
+
+        function autoResizeTextarea() {
+            codeEditor.style.height = "auto";
+            codeEditor.style.height = codeEditor.scrollHeight + "px";
+        }
+    </script>
+</body>
+</html>`;
+};
