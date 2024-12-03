@@ -67,7 +67,7 @@ export const getWebviewContent = (content: string | undefined) => {
         '.window {\n'+
             'display: inline-block;\n'+
             'min-width: 200px;\n'+
-            'background-color: white;\n'+
+            // 'background-color: white;\n'+
             'border-radius: 12px;\n'+
             'box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.08), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.04), 0 16px 16px rgba(0,0,0,0.02);\n'+
             'transition: transform 0.2s ease, box-shadow 0.2s ease;\n'+
@@ -141,7 +141,7 @@ export const getWebviewContent = (content: string | undefined) => {
 
         '.window-content {\n'+
             'padding: 24px;\n'+
-            'background-color: white;\n'+
+            // 'background-color: white;\n'+
             'border-bottom-left-radius: 12px;\n'+
             'border-bottom-right-radius: 12px;\n'+
             'overflow: hidden;\n'+
@@ -150,7 +150,7 @@ export const getWebviewContent = (content: string | undefined) => {
         'pre {\n'+
             'margin: 0;\n'+
             'white-space: pre-wrap;\n'+       // 修改这里
-    'word-wrap: break-word;\n'+       // 添加这行
+            'word-wrap: break-word;\n'+       // 添加这行
     'overflow-x: auto;\n'+          
         '}\n'+
 
@@ -158,14 +158,14 @@ export const getWebviewContent = (content: string | undefined) => {
             'font-family: "Fira Code", "Menlo", "Monaco", "Courier New", monospace;\n'+
             'font-size: 14px;\n'+
             'line-height: 1.6;\n'+
-            'background: transparent;\n'+
+            // 'background: transparent;\n'+
             'word-break: break-all;\n'+       // 添加这行
-    'white-space: pre-wrap;\n'+       // 添加这行
+            'white-space: pre-wrap;\n'+       // 添加这行
         '}\n'+
 
         '.hljs {\n'+
             'padding: 0;\n'+
-            'background: transparent;\n'+
+            // 'background: transparent;\n'+
         '}\n'+
 
         '.action-button {\n'+
@@ -276,7 +276,7 @@ export const getWebviewContent = (content: string | undefined) => {
                     '<div class="window-title">Code Card</div>\n'+
                 '</div>\n'+
                 '<div class="window-content">\n'+
-                    '<pre><code id="codeBlock">'+content+'</code></pre>\n'+
+                    '<pre class="hljs" ><code id="codeBlock">'+content+'</code></pre>\n'+
                 '</div>\n'+
             '</div>\n'+
         '</div>\n'+
