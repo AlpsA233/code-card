@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 
-export const getWebviewContent = (content: string | undefined) => {
+export const getWebviewContent = (content: string | undefined, webview: vscode.Webview, extensionUri: vscode.Uri) => {
     // 对内容进行安全处理  
     if (!content) {  
         content = '';  
@@ -11,6 +11,11 @@ export const getWebviewContent = (content: string | undefined) => {
     content = content  
         .replace(/</g, '&lt;')          // 转义HTML标签  
         .replace(/>/g, '&gt;');  
+
+    // 获取图片的webview URI
+    const imageUri = webview.asWebviewUri(
+        vscode.Uri.joinPath(extensionUri, 'src', 'images', 'image.png')
+    );
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -38,7 +43,8 @@ export const getWebviewContent = (content: string | undefined) => {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f3f4f6;
+            background: url(${imageUri}) no-repeat center center fixed;
+            background-size: cover;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: scroll;
             min-width: fit-content;
@@ -52,10 +58,28 @@ export const getWebviewContent = (content: string | undefined) => {
             margin: 20px;
             width: fit-content;
             min-width: min-content;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+    left: 0;
+            right: 0;
+            bottom: 0; 
+            background: url(${imageUri}) no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            // pointer-events: none;
+            // background-attachment: fixed;
+            // background-position: inherit;
         }
 
         .main {
-            padding: 1rem;
+            padding: 5rem;
+            position: relative;
+            z-index: 2;
         }
 
         .window {

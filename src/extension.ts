@@ -49,12 +49,15 @@ export function activate(context: vscode.ExtensionContext) {
 			'Code Card',
 			vscode.ViewColumn.One,
 			{
-				enableScripts: true
+				enableScripts: true,
+				localResourceRoots: [
+					vscode.Uri.joinPath(context.extensionUri, 'src', 'images')
+				]
 			}
 		);
 
 		// 生成预览
-		const html = getWebviewContent(selectedText);
+		const html = getWebviewContent(selectedText, panel.webview, context.extensionUri);
 		panel.webview.html = html;
 	});
 
