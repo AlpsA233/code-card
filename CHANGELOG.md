@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.1] - 2024-12-18
+- Support background image
+- Optimize card display effect
+
 ## [0.1.0] - 2024-12-03
 - Support editing code and preview
 - Change background color to black
