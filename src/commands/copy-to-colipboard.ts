@@ -61,25 +61,21 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
             position: relative;
         }
 
-        .container::before {
+        .main::before {
             content: '';
             position: fixed;
             top: 0;
-    left: 0;
+            left: 0;
             right: 0;
             bottom: 0; 
             background: url(${imageUri}) no-repeat center center;
             background-size: cover;
             z-index: -1;
-            // pointer-events: none;
-            // background-attachment: fixed;
-            // background-position: inherit;
         }
-
         .main {
-            padding: 5rem;
+            padding: 3rem;
             position: relative;
-            z-index: 2;
+            // z-index: 2;
         }
 
         .window {
