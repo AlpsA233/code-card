@@ -354,7 +354,7 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
                         <div class="window-button button-minimize"></div>
                         <div class="window-button button-expand"></div>
                     </div>
-                    <div class="window-title">Code Card=${bgImageUri}</div>
+                    <div class="window-title">Code Card</div>
                 </div>
                 <div class="window-content">
                     <div class="preview-container">

@@ -26,6 +26,10 @@
       {
         "command": "code-card.selectBackground",
         "title": "Select Code Card Background Image"
+      },
+      {
+        "command": "code-card.resetBackground",
+        "title": "Reset Code Card Background Image"
       }
     ],
     "menus": {

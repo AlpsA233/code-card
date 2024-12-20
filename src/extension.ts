@@ -94,6 +94,21 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(selectBackground);
 
+	// 重置背景图片命令
+	const resetBackground = vscode.commands.registerCommand('code-card.resetBackground', async () => {
+		try {
+			const config = vscode.workspace.getConfiguration('codeCard');
+			await config.update('backgroundImage', "", vscode.ConfigurationTarget.Global);
+			
+			// 显示成功消息
+			vscode.window.showInformationMessage('Background image has been reset to default');
+		} catch (error) {
+			vscode.window.showErrorMessage('Failed to reset background image');
+		}
+	});
+
+	context.subscriptions.push(resetBackground);
+
 }
 
 // This method is called when your extension is deactivated
