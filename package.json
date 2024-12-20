@@ -2,7 +2,7 @@
   "name": "code-card",
   "displayName": "Code Card",
   "description": "The Code Card extension allows users to generate code cards in Visual Studio Code. Users can execute a command to generate a code card, and the extension provides functionality to copy and save the card as an image, making it easy to share and showcase code snippets.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.95.0"
   },

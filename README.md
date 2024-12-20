@@ -15,6 +15,10 @@ The Code Card extension allows users to generate code cards in Visual Studio Cod
 - Click the Generate Card menu
 - Click button 'Copy as jpg' or 'Save Image'
 
+3. 
+- Select the code lines
+- Crtl + Shift + G
+
 ## Additional Information
 
 If you have any questions, feel free to comment or submit an issue.  

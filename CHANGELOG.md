@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.1.2] - 2024-12-20
+- Support background image
+- Optimize card display effect
+- Support Crtl + Shift + G
+
 ## [0.1.1] - 2024-12-18
 - Support background image
 - Optimize card display effect
