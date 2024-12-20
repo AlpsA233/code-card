@@ -22,6 +22,10 @@
       {
         "command": "code-card.generateCard",
         "title": "Generate Card"
+      },
+      {
+        "command": "code-card.selectBackground",
+        "title": "Select Code Card Background Image"
       }
     ],
     "menus": {
@@ -32,7 +36,43 @@
           "when": "editorHasSelection"
         }
       ]
-    }
+    },
+    "configuration": {
+      "title": "Code Card",
+      "properties": {
+        "codeCard.backgroundImage": {
+          "type": "string",
+          "default": "",
+          "description": "Background image(support local path or network URL)",
+          "editPresentation": "textAndButton",
+          "button": {
+            "text": "Select Image...",
+            "command": "code-card.selectBackground"
+          }
+        },
+        "codeCard.defaultTheme": {
+          "type": "string",
+          "enum": ["dark", "light"],
+          "default": "dark",
+          "description": "Default theme"
+        },
+        "codeCard.keybindings": {
+          "type": "object",
+          "default": {
+            "generateCard": "ctrl+shift+g"
+          },
+          "description": "Keybindings"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "code-card.generateCard",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g",
+        "when": "editorHasSelection"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

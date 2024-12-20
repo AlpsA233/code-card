@@ -1,7 +1,11 @@
 import * as vscode from 'vscode';
 
 
-export const getWebviewContent = (content: string | undefined, webview: vscode.Webview, extensionUri: vscode.Uri) => {
+export const getWebviewContent = (content: string | undefined, webview: vscode.Webview, extensionUri: vscode.Uri, config: vscode.WorkspaceConfiguration) => {
+    // 获取背景图片配置
+    const backgroundImage = config.get<string>('backgroundImage');
+
+
     // 对内容进行安全处理  
     if (!content) {  
         content = '';  
@@ -13,15 +17,35 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
         .replace(/>/g, '&gt;');  
 
     // 获取图片的webview URI
-    const imageUri = webview.asWebviewUri(
+    const defaultImageUri = webview.asWebviewUri(
         vscode.Uri.joinPath(extensionUri, 'src', 'images', 'image.png')
     );
+
+    let bgImageUri;
+
+    if (backgroundImage) {
+        if (backgroundImage.startsWith('http')) {
+            bgImageUri = backgroundImage;
+        } else {
+            try {
+                // 使用 vscode.Uri.file 创建 URI，然后转换为 webview URI
+                const fileUri = vscode.Uri.file(backgroundImage);
+                bgImageUri = webview.asWebviewUri(fileUri).toString();
+            } catch (error) {
+                console.error('Error processing background image path:', error);
+                bgImageUri = defaultImageUri.toString();
+            }
+        }
+    } else {
+        bgImageUri = defaultImageUri.toString();
+    }
 
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; style-src 'unsafe-inline' https:; script-src 'unsafe-inline' https:;">
     <title>Code Card</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <style>
@@ -43,7 +67,7 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
             display: flex;
             align-items: center;
             justify-content: center;
-            background: url(${imageUri}) no-repeat center center fixed;
+            background: url('${bgImageUri}') no-repeat center center fixed;
             background-size: cover;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: scroll;
@@ -68,7 +92,7 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
             left: 0;
             right: 0;
             bottom: 0; 
-            background: url(${imageUri}) no-repeat center center;
+            background: url('${bgImageUri}') no-repeat center center;
             background-size: cover;
             z-index: -1;
         }
@@ -330,7 +354,7 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
                         <div class="window-button button-minimize"></div>
                         <div class="window-button button-expand"></div>
                     </div>
-                    <div class="window-title">Code Card</div>
+                    <div class="window-title">Code Card=${bgImageUri}</div>
                 </div>
                 <div class="window-content">
                     <div class="preview-container">
