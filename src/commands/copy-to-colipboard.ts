@@ -1,8 +1,17 @@
 import * as vscode from 'vscode';
 
+const GRADIENT_PRESETS = {
+    'purple-blue': 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)',
+    'warm-flame': 'linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)',
+    'morning-light': 'linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%)',
+    'solid-white': '#ffffff',
+    'solid-black': '#000000'
+};
 
 export const getWebviewContent = (content: string | undefined, webview: vscode.Webview, extensionUri: vscode.Uri, config: vscode.WorkspaceConfiguration) => {
     // 获取背景图片配置
+    const backgroundType = config.get<string>('backgroundType') || 'image';
+    const gradientPreset = config.get<string>('gradientPreset') || 'purple-blue';
     const backgroundImage = config.get<string>('backgroundImage');
 
 
@@ -22,23 +31,30 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
     );
 
     let bgImageUri;
-
-    if (backgroundImage) {
-        if (backgroundImage.startsWith('http')) {
-            bgImageUri = backgroundImage;
-        } else {
-            try {
-                // 使用 vscode.Uri.file 创建 URI，然后转换为 webview URI
-                const fileUri = vscode.Uri.file(backgroundImage);
-                bgImageUri = webview.asWebviewUri(fileUri).toString();
-            } catch (error) {
-                console.error('Error processing background image path:', error);
-                bgImageUri = defaultImageUri.toString();
+    let backgroundStyle = '';
+    if (backgroundType === 'image' && backgroundImage) {
+        if (backgroundImage) {
+            if (backgroundImage.startsWith('http')) {
+                bgImageUri = backgroundImage;
+            } else {
+                try {
+                    // 使用 vscode.Uri.file 创建 URI，然后转换为 webview URI
+                    const fileUri = vscode.Uri.file(backgroundImage);
+                    bgImageUri = webview.asWebviewUri(fileUri).toString();
+                } catch (error) {
+                    console.error('Error processing background image path:', error);
+                    bgImageUri = defaultImageUri.toString();
+                }
             }
+        } else {
+            bgImageUri = defaultImageUri.toString();
         }
+        backgroundStyle = `url('${bgImageUri}') no-repeat center center fixed`;
     } else {
-        bgImageUri = defaultImageUri.toString();
+        backgroundStyle = GRADIENT_PRESETS[gradientPreset] || GRADIENT_PRESETS['purple-blue'];
     }
+
+    
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -67,8 +83,9 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
             display: flex;
             align-items: center;
             justify-content: center;
-            background: url('${bgImageUri}') no-repeat center center fixed;
+            background: ${backgroundStyle};
             background-size: cover;
+            background-attachment: fixed;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: scroll;
             min-width: fit-content;
@@ -92,14 +109,17 @@ export const getWebviewContent = (content: string | undefined, webview: vscode.W
             left: 0;
             right: 0;
             bottom: 0; 
-            background: url('${bgImageUri}') no-repeat center center;
+            background: ${backgroundStyle};
             background-size: cover;
+            background-attachment: fixed;
             z-index: -1;
+            transform: translateZ(0); /* 强制创建新的渲染层，避免渐变重叠 */
         }
         .main {
             padding: 3rem;
             position: relative;
             // z-index: 2;
+            overflow: hidden;
         }
 
         .window {

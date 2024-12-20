@@ -60,6 +60,24 @@
             "generateCard": "ctrl+shift+g"
           },
           "description": "Keybindings"
+        },
+        "codeCard.backgroundType": {
+          "type": "string",
+          "enum": ["image", "gradient"],
+          "default": "gradient",
+          "description": "Background type for Code Card"
+        },
+        "codeCard.gradientPreset": {
+          "type": "string",
+          "enum": [
+            "purple-blue",
+            "warm-flame",
+            "morning-light",
+            "solid-white",
+            "solid-black"
+          ],
+          "default": "purple-blue",
+          "description": "Preset gradient background when not using image"
         }
       }
     },
