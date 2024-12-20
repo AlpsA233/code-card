@@ -54,12 +54,6 @@
             "command": "code-card.selectBackground"
           }
         },
-        "codeCard.defaultTheme": {
-          "type": "string",
-          "enum": ["dark", "light"],
-          "default": "dark",
-          "description": "Default theme"
-        },
         "codeCard.keybindings": {
           "type": "object",
           "default": {
